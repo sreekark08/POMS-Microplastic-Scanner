@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>POMS – Optical Microplastic Scanner | Team Ecosphere</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<nav>
+  <div class="logo"><svg viewBox="0 0 32 32" fill="none" stroke="#FAF6EE" stroke-width="1.5"><circle cx="16" cy="16" r="12"/><path d="M16 4v24M4 16h24" opacity=".4"/><circle cx="16" cy="6" r="2.5" fill="#FAF6EE"/></svg><div><b>POMS</b><small>Optical Microplastic Scanner | Ecosphere</small></div></div>
+  <div class="links">
+    <a href="#overview">Overview &amp; Principle</a><a href="#mechanism">Working Mechanism</a><a href="#dash">Live Scanner Dashboard</a>
+    <span class="sw" style="cursor:default"><span class="live off" id="conn-dot" style="margin:0"></span><span id="conn-txt">Connecting…</span></span>
+  </div>
+</nav>
+
+<section id="overview"><div class="wrap">
+  <div class="hero"><div><div class="eyebrow">Team Ecosphere · Project Brief</div>
+  <h1>Seeing the invisible: rapid microplastic detection in water.</h1>
+  <p class="lead">POMS is a low-cost, non-destructive optical scanner. Cross-polarized light makes synthetic polymer fragments glow against a dark field, and a real-time OpenCV pipeline isolates, counts and classifies them frame by frame — no chemicals, no sample destruction, results in seconds.</p>
+  <div class="stats"><span>NON-DESTRUCTIVE</span><span>REAL-TIME · LIVE OR VIDEO</span><span>OPEN-SOURCE OPENCV</span><span>HAZARD CLASSIFICATION + FILTRATION ADVICE</span></div></div>
+<div id="hero-art"><canvas id="hc" width="460" height="460"></canvas><div class="mono" style="position:absolute;left:12px;bottom:10px;color:var(--cream);font-size:11px;opacity:.7;pointer-events:none">MOVE CURSOR · CLICK TO ADD PARTICLES</div></div></div>
+<div class="chips">
+<button class="chip" data-t="The water sample sits in a clear cell between two polarizers. No dyes, chemicals or sample destruction."><svg viewBox="0 0 24 24"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></svg><b>Water Sample</b><small>Clear, untouched</small></button>
+<button class="chip" data-t="Crossed filters (0° and 90°) cancel all direct light, leaving a perfectly dark optical field."><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg><b>Cross-Polarized</b><small>Dark field</small></button>
+<button class="chip" data-t="Stressed synthetic polymers rotate polarized light (birefringence), so each particle glows against the black background."><svg viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><b>Birefringence</b><small>Particles glow</small></button>
+<button class="chip" data-t="A camera or an uploaded video streams frames into the OpenCV pipeline: grayscale, blur, threshold, contour filter."><svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><b>Vision Pipeline</b><small>Real-time frames</small></button>
+<button class="chip" data-t="A 30-frame moving average classifies the sample: under 5 is safe, 5 to 20 is moderate, over 20 is critical."><svg viewBox="0 0 24 24"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.5"/></svg><b>Hazard Level</b><small>Safe → Critical</small></button>
+<button class="chip" data-t="Advice scales with hazard: sediment and carbon filters for moderate, Reverse Osmosis plus 0.1 µm glass fiber for critical."><svg viewBox="0 0 24 24"><path d="M3 4h18l-7 9v6l-4 2v-8z"/></svg><b>Filtration</b><small>Tailored advice</small></button>
+</div><div id="chipinfo">Tap an icon to see how each part of POMS works.</div>
+</div></section>
+
+<section id="mechanism" style="background:var(--cream2);border-top:1px solid var(--sand);border-bottom:1px solid var(--sand)"><div class="wrap">
+  <div class="eyebrow">Scientific Principle</div><h2>Working Mechanism</h2>
+  <p class="lead" style="font-size:16px">Replace any diagram below with a real hardware photo: swap the <span class="mono">&lt;svg&gt;</span> inside <span class="mono">.fig</span> for an <span class="mono">&lt;img src="…"&gt;</span>.</p>
+  <div class="steps">
+    <article class="step"><div class="fig">
+      <svg viewBox="0 0 320 200" fill="none" stroke="#FAF6EE"><rect width="320" height="200" fill="#0B192C" stroke="none"/><circle cx="34" cy="100" r="14" fill="#FAF6EE" stroke="none"/><path d="M50 100H96M50 90l40-8M50 110l40 8" stroke-width="1.5" opacity=".6"/>
+      <rect x="96" y="60" width="8" height="80" fill="#E2D9C8"/><path d="M100 78v44M100 100h-0" stroke="#0B192C"/><path d="M104 100H176" stroke-width="2"/><path d="M104 100H176" stroke="#E2D9C8" stroke-dasharray="2 4"/>
+      <ellipse cx="140" cy="100" rx="9" ry="26" stroke="#3b6aa0"/><rect x="196" y="55" width="8" height="90" fill="#E2D9C8"/><path d="M200 66l0 68M192 80l16 40" stroke="#0B192C" opacity=".6"/>
+      <path d="M176 100h14" stroke-width="2"/><path d="M204 100H300" stroke="#243B55" stroke-width="2" stroke-dasharray="3 5"/><text x="250" y="92" fill="#E2D9C8" font-size="10" stroke="none" font-family="Arial">BLOCKED</text>
+      <text x="82" y="46" fill="#E2D9C8" font-size="10" stroke="none" font-family="Arial">POLARIZER 0°</text><text x="170" y="46" fill="#E2D9C8" font-size="10" stroke="none" font-family="Arial">ANALYZER 90°</text><text x="14" y="186" fill="#E2D9C8" font-size="10" stroke="none" font-family="Arial">DARK OPTICAL FIELD</text></svg></div>
+      <div class="tx"><div class="num">STEP 01</div><h3>Cross-Polarized Illumination</h3>Two orthogonal polarizing filters block all direct, unscattered light, leaving a near-perfectly dark optical field.</div></article>
+    <article class="step"><div class="fig">
+      <svg viewBox="0 0 320 200"><defs><radialGradient id="g"><stop offset="0" stop-color="#FAF6EE"/><stop offset=".4" stop-color="#E2D9C8" stop-opacity=".8"/><stop offset="1" stop-color="#0B192C" stop-opacity="0"/></radialGradient></defs><rect width="320" height="200" fill="#0B192C"/>
+      <circle cx="160" cy="95" r="52" fill="url(#g)"/><path d="M140 90l12-14 22 8 8 22-14 14-20-6z" fill="#FAF6EE"/><g stroke="#8fb0d6" stroke-width="1.5" fill="none"><path d="M20 70c15-12 15 12 30 0s15 12 30 0"/><path d="M240 120c10-12 10 12 20 0s10 12 20 0"/></g>
+      <g fill="#243B55"><circle cx="40" cy="160" r="2"/><circle cx="280" cy="40" r="2"/><circle cx="90" cy="30" r="1.5"/></g><text x="14" y="186" fill="#E2D9C8" font-size="10" font-family="Arial">STRESS BIREFRINGENCE ROTATES POLARIZATION</text></svg></div>
+      <div class="tx"><div class="num">STEP 02</div><h3>Polymer Birefringence</h3>Synthetic microplastics are optically anisotropic under stress: they rotate the polarized light, so each particle glows brightly against the black background.</div></article>
+    <article class="step"><div class="fig">
+      <svg viewBox="0 0 320 200" font-family="Arial" font-size="9" fill="none" stroke="#FAF6EE"><rect width="320" height="200" fill="#0B192C" stroke="none"/>
+      <g><rect x="10" y="30" width="56" height="34"/><rect x="88" y="30" width="56" height="34"/><rect x="166" y="30" width="56" height="34"/><rect x="244" y="30" width="56" height="34"/></g>
+      <g fill="#FAF6EE" stroke="none"><text x="18" y="50">CAPTURE</text><text x="94" y="50">GRAYSCALE</text><text x="176" y="50">GAUSS BLUR</text><text x="252" y="50">THRESHOLD</text></g>
+      <path d="M66 47h22M144 47h22M222 47h22" stroke="#E2D9C8"/><path d="M272 64v34" stroke="#E2D9C8"/><rect x="190" y="98" width="110" height="34" stroke="#E2D9C8"/><g fill="#FAF6EE" stroke="none"><text x="198" y="118">CONTOUR AREA FILTER</text></g>
+      <path d="M190 115h-44" stroke="#E2D9C8"/><rect x="88" y="98" width="58" height="34" fill="#FAF6EE" stroke="none"/><text x="94" y="118" fill="#0B192C" stroke="none">COUNT + CLASS</text>
+      <rect x="20" y="150" width="280" height="30" stroke="#243B55"/><circle cx="60" cy="165" r="4" fill="#FAF6EE"/><circle cx="130" cy="162" r="3" fill="#FAF6EE"/><circle cx="210" cy="168" r="5" fill="#FAF6EE"/><circle cx="260" cy="160" r="3" fill="#FAF6EE"/></svg></div>
+      <div class="tx"><div class="num">STEP 03</div><h3>OpenCV Computer Vision Pipeline</h3>Each frame is converted to grayscale, Gaussian-blurred, binary-thresholded and contour-filtered by area to isolate, count and classify particles.</div></article>
+  </div>
+</div></section>
+
+<section id="dash"><div class="wrap">
+  <div class="eyebrow">Diagnostic Dashboard</div><h2>Live Scanner Dashboard</h2>
+  <div class="grid">
+    <aside class="panel">
+      <div class="group"><h4>1 · Data Input Source</h4>
+        <div class="seg"><label><input type="radio" name="src" value="camera" checked><span>Live Camera Feed</span></label><label><input type="radio" name="src" value="upload"><span>Upload Video File</span></label></div>
+        <div id="drop"><input type="file" id="file" accept=".mp4,.avi,.mov,video/mp4,video/x-msvideo,video/quicktime" hidden><b>Drop video here</b><br>or click to browse<br><small>.mp4 · .avi · .mov</small><div id="fname" class="mono" style="margin-top:6px;font-size:11px"></div></div></div>
+      <div class="group"><h4>2 · Optical Calibration</h4>
+        <div class="sl"><div><span>Gaussian Blur (kernel)</span><b id="v-blur">3</b></div><input type="range" id="blur" min="1" max="15" step="2" value="3"></div>
+        <div class="sl"><div><span>Binary Threshold</span><b id="v-thr">105</b></div><input type="range" id="thr" min="0" max="255" step="1" value="105"></div>
+        <div class="sl"><div><span>Min Particle Size (px²)</span><b id="v-area">50</b></div><input type="range" id="area" min="10" max="200" step="5" value="50"></div></div>
+      <div class="group"><h4>3 · Scanner Controls</h4>
+        <button class="pri" id="toggle"><svg viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></svg>Pause Scanner</button><button class="sec" id="reset"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/></svg>Reset Calibration</button></div>
+    </aside>
+    <div>
+      <div class="screens">
+        <div class="scr"><h5><span><i class="live" id="dot"></i>SCREEN 1 · Normal Detection (AR HUD)</span><em id="lbl1">CONNECTING</em></h5><div class="view"><img id="normal-feed" src="/video_feed" alt="Normal detection feed (AR HUD)"></div></div>
+        <div class="scr"><h5>SCREEN 2 · Underground Processing (Binary Mask)<em id="lbl2">CONNECTING</em></h5><div class="view"><img id="processed-feed" src="/processed_feed" alt="Binary threshold mask"></div></div>
+      </div>
+      <div class="metrics">
+        <div class="card"><small>Instantaneous Particle Count</small><div class="v" id="m-live">0</div></div>
+        <div class="card"><small>30-Frame Moving Average</small><div class="v" id="m-avg">0.0</div><div id="gauge"><i></i></div></div>
+        <div class="card"><small>Hazard Classification</small><div><span class="badge safe" id="m-badge">SAFE</span></div></div>
+      </div>
+      <div class="bottom">
+        <div class="card" id="rec"><small>Recommended Filtration Solution</small><p id="rec-t"></p></div>
+        <div class="card" style="display:flex;align-items:center"><button class="pri" id="dl" style="margin:0"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg>Generate &amp; Download Diagnostic Report (.txt)</button></div>
+      </div>
+    </div>
+  </div>
+</div></section>
+<footer>POMS · Plastic Optical Microplastic Scanner · Team Ecosphere</footer>
+
+<script src="/static/script.js"></script>
+</body>
+</html>
