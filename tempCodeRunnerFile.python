@@ -1,0 +1,71 @@
+import cv2
+import numpy as np
+import streamlit as st
+
+# Set up the web page layout
+st.set_page_config(page_title="POMS Dashboard", layout="wide")
+st.title("🔬 POMS: Microplastic Contamination Scanner")
+
+# Sidebar for live calibration
+st.sidebar.header("Optical Calibration")
+threshold_value = st.sidebar.slider("Binary Threshold", min_value=0, max_value=255, value=105)
+min_area = st.sidebar.slider("Minimum Particle Size", min_value=10, max_value=200, value=50)
+
+# Main layout: Video feed on the left, alerts on the right
+col1, col2 = st.columns([2, 1])
+st_frame = col1.empty()
+status_panel = col2.empty()
+
+# Initialize camera (0 for webcam)
+cap = cv2.VideoCapture(0)
+
+while cap.isOpened():
+    ret, frame = cap.read()
+    if not ret:
+        st.error("Failed to capture video feed.")
+        break
+
+    # 1. OpenCV Preprocessing
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    blur = cv2.GaussianBlur(gray, (3, 3), 0)
+    _, thresh = cv2.threshold(blur, threshold_value, 255, cv2.THRESH_BINARY)
+    contours, _ = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
+
+    # 2. Particle Detection & Bounding Boxes
+    valid_particles = 0
+    for cnt in contours:
+        if cv2.contourArea(cnt) > min_area:
+            valid_particles += 1
+            x, y, w, h = cv2.boundingRect(cnt)
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+    # 3. AR Heads-Up Display (HUD) Overlay
+    overlay = frame.copy()
+    cv2.rectangle(overlay, (10, 10), (320, 140), (0, 0, 0), -1)
+    cv2.addWeighted(overlay, 0.6, frame, 0.4, 0, frame)
+    
+    cv2.putText(frame, "POMS OPTICAL SCANNER", (25, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+    cv2.putText(frame, f"TARGETS: {valid_particles}", (25, 75), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 255), 2)
+
+    # Crosshair
+    h, w_frame, _ = frame.shape
+    cx, cy = int(w_frame / 2), int(h / 2)
+    cv2.circle(frame, (cx, cy), 15, (255, 255, 255), 1)
+
+    # 4. Sync AR Warning with Streamlit UI
+    if valid_particles > 5:
+        # AR Visuals
+        cv2.putText(frame, "STATUS: HAZARD DETECTED", (25, 110), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
+        cv2.rectangle(frame, (0, 0), (w_frame, h), (0, 0, 255), 6)
+        # Web Dashboard Alert
+        status_panel.error(f"🚨 CRITICAL HAZARD: {valid_particles} Contaminants Detected!")
+    else:
+        # AR Visuals
+        cv2.putText(frame, "STATUS: CLEAR", (25, 110), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+        # Web Dashboard Alert
+        status_panel.success("✅ STATUS: Safe. Baseline water clarity maintained.")
+
+    # 5. Render to Streamlit (Convert BGR to RGB for web display)
+    st_frame.image(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB), channels="RGB")
+
+cap.release()
